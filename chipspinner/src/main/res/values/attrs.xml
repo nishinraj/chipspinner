@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WolfChipSpinner">
+        <attr name="wcsTitle" format="string" />
+        <!--<attr name="wcs" format="string" />-->
+        <attr name="wcsTextColor" format="color" />
+        <attr name="wcsShowTitle" format="boolean" />
+        <!--<attr name="show_date_picker" format="boolean" />-->
+    </declare-styleable>
+</resources>
