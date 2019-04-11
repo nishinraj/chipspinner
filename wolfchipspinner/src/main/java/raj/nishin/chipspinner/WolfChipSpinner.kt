@@ -111,7 +111,6 @@ class WolfChipSpinner : LinearLayout {
         rvItems.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
         rvItems.adapter = spinnerAdapter
         rvItems.isNestedScrollingEnabled = false
-
     }
 
     private fun setListPadding() {
