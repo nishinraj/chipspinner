@@ -30,7 +30,11 @@ class WolfChipSpinner : LinearLayout {
         init(context, attrs)
     }
 
-
+    var colorTheme: String = ""
+        set(value) {
+            field = value
+            spinnerAdapter.colorTheme = value.toCharArray()
+        }
     var selectedPosition: Int = 0
         set(value) {
             field = value
@@ -85,11 +89,13 @@ class WolfChipSpinner : LinearLayout {
                     tvTitle.setTextColor(ContextCompat.getColor(ctx, this))
                 }
             }
+
+            spinnerAdapter.colorTheme =
+                (ta.getString(R.styleable.WolfChipSpinner_wcsColorTheme) ?: "").toLowerCase().toCharArray()
             ta.recycle()
         }
         setListPadding()
         rvItems.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
-        spinnerAdapter.colorTheme = "RgBvY".toLowerCase().toCharArray()
         rvItems.adapter = spinnerAdapter
         rvItems.isNestedScrollingEnabled = false
 
@@ -124,6 +130,10 @@ class WolfChipSpinner : LinearLayout {
         private var useCustomColorTheme = false
         private var userTheme = "".toCharArray()
         var colorTheme: CharArray = CharArray(0)
+            set(value) {
+                field = value
+                setCustomColorTheme()
+            }
         var selectedPosition = 0
             set(value) {
                 field = value
@@ -181,6 +191,11 @@ class WolfChipSpinner : LinearLayout {
         fun reset(value: ArrayList<String>) {
             dataSet.removeAll(dataSet)
             dataSet.addAll(value)
+            setCustomColorTheme()
+            notifyDataSetChanged()
+        }
+
+        private fun setCustomColorTheme() {
             if (colorTheme.isNotEmpty() && colorTheme.size == dataSet.size) {
                 useCustomColorTheme = true
                 colorTheme.forEach {
@@ -192,7 +207,6 @@ class WolfChipSpinner : LinearLayout {
                     userTheme = colorTheme
                 }
             }
-            notifyDataSetChanged()
         }
     }
 }

@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="WolfChipSpinner">
         <attr name="wcsTitle" format="string" />
-        <!--<attr name="wcs" format="string" />-->
+        <attr name="wcsColorTheme" format="string" />
         <attr name="wcsTextColor" format="color" />
         <attr name="wcsShowTitle" format="boolean" />
         <!--<attr name="show_date_picker" format="boolean" />-->

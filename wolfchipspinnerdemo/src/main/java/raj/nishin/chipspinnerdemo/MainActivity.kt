@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
                 tvSelected.text = "Selected:${get(it)}"
             }
         }
+        wcsClass.colorTheme = "rgbyv"
     }
 
 
