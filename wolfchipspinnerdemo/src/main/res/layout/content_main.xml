@@ -12,6 +12,7 @@
     <raj.nishin.chipspinner.WolfChipSpinner
         app:wcsTitle="Genre:"
         app:wcsTextColor="#f00"
+        app:wcsDividers="top"
         android:id="@+id/wcsClass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

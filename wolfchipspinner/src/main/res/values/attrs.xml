@@ -5,6 +5,12 @@
         <attr name="wcsColorTheme" format="string" />
         <attr name="wcsTextColor" format="color" />
         <attr name="wcsShowTitle" format="boolean" />
+        <attr name="wcsDividers" format="enum">
+            <enum name="none" value="0" />
+            <enum name="top" value="1" />
+            <enum name="bottom" value="2" />
+            <enum name="both" value="3" />
+        </attr>
         <!--<attr name="show_date_picker" format="boolean" />-->
     </declare-styleable>
 </resources>

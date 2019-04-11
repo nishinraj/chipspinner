@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.wolf_chip_spinner.view.*
  * Created by WOLF
  * at 11:28 on Wednesday 27 March 2019
  */
+
+
 class WolfChipSpinner : LinearLayout {
 
     constructor(context: Context) : super(context) {
@@ -55,15 +57,26 @@ class WolfChipSpinner : LinearLayout {
         }
 
 
-    var dividerVisible = true
+    var dividerVisibility = both
         set(value) {
             field = value
-            if (value) {
-                dividerTop.visibility = View.VISIBLE
-                dividerBottom.visibility = View.VISIBLE
-            } else {
-                dividerTop.visibility = View.GONE
-                dividerBottom.visibility = View.GONE
+            when (value) {
+                WolfChipSpinner.none -> {
+                    dividerTop.visibility = View.GONE
+                    dividerBottom.visibility = View.GONE
+                }
+                WolfChipSpinner.top -> {
+                    dividerTop.visibility = View.VISIBLE
+                    dividerBottom.visibility = View.GONE
+                }
+                WolfChipSpinner.bottom -> {
+                    dividerTop.visibility = View.GONE
+                    dividerBottom.visibility = View.VISIBLE
+                }
+                else -> {
+                    dividerTop.visibility = View.VISIBLE
+                    dividerBottom.visibility = View.VISIBLE
+                }
             }
         }
     var dataSet = ArrayList<String>()
@@ -89,7 +102,7 @@ class WolfChipSpinner : LinearLayout {
                     tvTitle.setTextColor(ContextCompat.getColor(ctx, this))
                 }
             }
-
+            dividerVisibility = ta.getInt(R.styleable.WolfChipSpinner_wcsDividers, WolfChipSpinner.none)
             spinnerAdapter.colorTheme =
                 (ta.getString(R.styleable.WolfChipSpinner_wcsColorTheme) ?: "").toLowerCase().toCharArray()
             ta.recycle()
@@ -209,8 +222,19 @@ class WolfChipSpinner : LinearLayout {
             }
         }
     }
+
+    companion object {
+        const val none = 0
+        const val top = 1
+        const val bottom = 2
+        const val both = 3
+    }
 }
 
 infix fun WolfChipSpinner.onItemSelected(callBack: ((position: Int) -> Unit)) {
     onItemSelected = callBack
+}
+
+infix fun WolfChipSpinner.dividers(divider: Int) {
+    dividerVisibility = divider
 }
