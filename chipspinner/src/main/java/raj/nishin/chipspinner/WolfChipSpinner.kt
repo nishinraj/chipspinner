@@ -30,6 +30,12 @@ class WolfChipSpinner : LinearLayout {
         init(context, attrs)
     }
 
+
+    var selectedPosition: Int = 0
+        set(value) {
+            field = value
+            spinnerAdapter.selectedPosition = value
+        }
     var onItemSelected: ((position: Int) -> Unit)? = null
     var title = ""
         set(value) {
@@ -59,10 +65,10 @@ class WolfChipSpinner : LinearLayout {
     var dataSet = ArrayList<String>()
         set(value) {
             field = value
-            spinnerAdapter = ChipSpinnerAdapter(value)
-            rvItems.adapter = spinnerAdapter
+            spinnerAdapter.reset(value)
+//            rvItems.adapter = spinnerAdapter
         }
-    var spinnerAdapter = ChipSpinnerAdapter()
+    val spinnerAdapter = ChipSpinnerAdapter()
 
     private fun init(ctx: Context, attrs: AttributeSet? = null) {
         (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
@@ -72,7 +78,8 @@ class WolfChipSpinner : LinearLayout {
         attrs?.let {
             val ta = context.obtainStyledAttributes(it, R.styleable.WolfChipSpinner)
             title = ta.getString(R.styleable.WolfChipSpinner_wcsTitle) ?: ""
-            titleVisible = ta.getBoolean(R.styleable.WolfChipSpinner_wcsShowTitle, title.isNotEmpty()) && title.isNotEmpty()
+            titleVisible =
+                ta.getBoolean(R.styleable.WolfChipSpinner_wcsShowTitle, title.isNotEmpty()) && title.isNotEmpty()
             with(ta.getResourceId(R.styleable.WolfChipSpinner_wcsTextColor, -1)) {
                 if (-1 != this) {
                     tvTitle.setTextColor(ContextCompat.getColor(ctx, this))
@@ -82,7 +89,7 @@ class WolfChipSpinner : LinearLayout {
         }
         setListPadding()
         rvItems.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
-        spinnerAdapter = ChipSpinnerAdapter(dataSet)
+        spinnerAdapter.colorTheme = "RgBvY".toLowerCase().toCharArray()
         rvItems.adapter = spinnerAdapter
         rvItems.isNestedScrollingEnabled = false
 
@@ -107,12 +114,16 @@ class WolfChipSpinner : LinearLayout {
 //
 //    }
 
-    fun setSelection(position: Int) {
-        spinnerAdapter.selectedPosition = position
-    }
 
-    inner class ChipSpinnerAdapter(private val dataSet: ArrayList<String> = ArrayList()) :
+    inner class ChipSpinnerAdapter(
+        val dataSet: ArrayList<String> = ArrayList()
+
+    ) :
         RecyclerView.Adapter<ChipSpinnerAdapter.VH>() {
+        private val themeLetters = listOf('g', 'r', 'b', 'y', 'v')
+        private var useCustomColorTheme = false
+        private var userTheme = "".toCharArray()
+        var colorTheme: CharArray = CharArray(0)
         var selectedPosition = 0
             set(value) {
                 field = value
@@ -128,21 +139,60 @@ class WolfChipSpinner : LinearLayout {
             with(holder.itemView) {
                 rootView.setOnClickListener {
                     onItemSelected?.invoke(position)
-                    selectedPosition = position
-                    notifyDataSetChanged()
+                    this@WolfChipSpinner.selectedPosition = position
                 }
                 tvChip.setOnClickListener {
                     onItemSelected?.invoke(position)
-                    selectedPosition = position
-                    notifyDataSetChanged()
+                    this@WolfChipSpinner.selectedPosition = position
+                }
+                if (useCustomColorTheme) {
+                    tvChip.setBackgroundResource(getBackground(userTheme[position]))
                 }
                 tvChip.text = dataSet[position]
                 isSelected = position == selectedPosition
             }
         }
 
-        inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView)
 
+        private fun getBackground(letter: Char): Int {
+            return when (letter) {
+                'g' -> {
+                    R.drawable.chip_background_green
+                }
+                'r' -> {
+                    R.drawable.chip_background_red
+                }
+                'b' -> {
+                    R.drawable.chip_background_blue
+                }
+                'y' -> {
+                    R.drawable.chip_background_yellow
+                }
+                'v' -> {
+                    R.drawable.chip_background_violet
+                }
+                else -> {
+                    R.drawable.chip_background_default
+                }
+            }
+        }
+
+        fun reset(value: ArrayList<String>) {
+            dataSet.removeAll(dataSet)
+            dataSet.addAll(value)
+            if (colorTheme.isNotEmpty() && colorTheme.size == dataSet.size) {
+                useCustomColorTheme = true
+                colorTheme.forEach {
+                    if (it !in themeLetters) {
+                        useCustomColorTheme = false
+                    }
+                }
+                if (useCustomColorTheme) {
+                    userTheme = colorTheme
+                }
+            }
+            notifyDataSetChanged()
         }
     }
 }

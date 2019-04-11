@@ -2,5 +2,10 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorWolfChipBackground">@color/colorPrimary</color>
+    <color name="colorWolfChipBackgroundRed">#D52E20</color>
+    <color name="colorWolfChipBackgroundGreen">#3C993F</color>
+    <color name="colorWolfChipBackgroundBlue">#2F8FDB</color>
+    <color name="colorWolfChipBackgroundYellow">#DFCC47</color>
+    <color name="colorWolfChipBackgroundViolet">#673AB7</color>
     <!--<color name="colorAccent">#D81B60</color>-->
 </resources>

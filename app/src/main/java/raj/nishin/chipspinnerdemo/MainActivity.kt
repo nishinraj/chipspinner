@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
             add("Comedy")
             add("Drama")
             add("Fantasy")
-            add("Sci-Fi")
         }) {
             wcsClass.dataSet = this
             wcsClass.onItemSelected {
