@@ -84,7 +84,6 @@ class WolfChipSpinner : LinearLayout {
         set(value) {
             field = value
             spinnerAdapter.reset(value)
-//            rvItems.adapter = spinnerAdapter
         }
     val spinnerAdapter = ChipSpinnerAdapter()
     fun undoSelection() {
