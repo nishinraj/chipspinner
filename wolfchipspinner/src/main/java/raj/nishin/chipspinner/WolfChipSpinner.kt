@@ -79,7 +79,7 @@ class WolfChipSpinner : LinearLayout {
                 }
             }
         }
-    private var previousPositon = -1
+    private var previousPositon = 0
     var dataSet = ArrayList<String>()
         set(value) {
             field = value
@@ -88,9 +88,7 @@ class WolfChipSpinner : LinearLayout {
         }
     val spinnerAdapter = ChipSpinnerAdapter()
     fun undoSelection() {
-        if (-1 != previousPositon) {
-            selectedPosition = previousPositon
-        }
+        selectedPosition = previousPositon
     }
 
     private fun init(ctx: Context, attrs: AttributeSet? = null) {
