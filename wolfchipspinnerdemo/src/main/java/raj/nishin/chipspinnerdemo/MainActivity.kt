@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         wcsClass.colorTheme = "rgbyv"
+        tvSelected.setOnClickListener {
+            wcsClass.undoSelection()
+        }
     }
 
 

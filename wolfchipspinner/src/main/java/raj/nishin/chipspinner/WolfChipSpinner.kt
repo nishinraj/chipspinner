@@ -79,6 +79,7 @@ class WolfChipSpinner : LinearLayout {
                 }
             }
         }
+    private var previousPositon = -1
     var dataSet = ArrayList<String>()
         set(value) {
             field = value
@@ -86,6 +87,11 @@ class WolfChipSpinner : LinearLayout {
 //            rvItems.adapter = spinnerAdapter
         }
     val spinnerAdapter = ChipSpinnerAdapter()
+    fun undoSelection() {
+        if (-1 != previousPositon) {
+            selectedPosition = previousPositon
+        }
+    }
 
     private fun init(ctx: Context, attrs: AttributeSet? = null) {
         (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
@@ -120,18 +126,6 @@ class WolfChipSpinner : LinearLayout {
             rvItems.setPadding(16, 0, 16, 0)
         }
     }
-//
-//    private fun setDividerVisibility() {
-//        if (dividerVisible) {
-//            dividerTop.visibility = View.VISIBLE
-//            dividerBottom.visibility = View.VISIBLE
-//        } else {
-//            dividerTop.visibility = View.GONE
-//            dividerBottom.visibility = View.GONE
-//        }
-//
-//    }
-
 
     inner class ChipSpinnerAdapter(
         val dataSet: ArrayList<String> = ArrayList()
@@ -148,6 +142,7 @@ class WolfChipSpinner : LinearLayout {
             }
         var selectedPosition = 0
             set(value) {
+                previousPositon = field
                 field = value
                 notifyDataSetChanged()
             }
