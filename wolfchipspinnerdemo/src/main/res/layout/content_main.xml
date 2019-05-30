@@ -18,8 +18,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:wcsDividers="both"
         app:wcsColorTheme="rg"
-        app:wcsLayout="linear"
-        app:wcsMultipleSelection="false"
+        app:wcsLayout="flex_grid"
+        app:wcsMultipleSelection="true"
         app:wcsTextColor="#f00"
         app:wcsTitle="Genre:" />
 

@@ -143,6 +143,14 @@ class WolfChipSpinner : LinearLayout {
         }
     }
 
+    fun selectAll() {
+        spinnerAdapter.reset(spinnerAdapter.dataSet.map { it.text } as ArrayList<String>, true)
+    }
+
+    fun unselectAll() {
+        spinnerAdapter.reset(spinnerAdapter.dataSet.map { it.text } as ArrayList<String>)
+    }
+
     inner class ChipSpinnerAdapter(
         val dataSet: ArrayList<WolfChipModel> = ArrayList()
 
@@ -230,10 +238,16 @@ class WolfChipSpinner : LinearLayout {
             }
         }
 
-        fun reset(value: ArrayList<String>) {
+        fun reset(value: ArrayList<String>, select: Boolean = false) {
             dataSet.removeAll(dataSet)
-            dataSet.addAll(value.map { WolfChipModel(it, false) })
+            dataSet.addAll(value.map { WolfChipModel(it, select) })
             setCustomColorTheme()
+            if (select) {
+                for (i in 0 until dataSet.size)
+                    selectedItems.add(i)
+            } else {
+                selectedItems.removeAll(selectedItems)
+            }
             notifyDataSetChanged()
         }
 
