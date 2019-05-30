@@ -18,13 +18,25 @@ class MainActivity : AppCompatActivity() {
             add("Comedy")
             add("Drama")
             add("Fantasy")
+            add("Action")
+            add("Animation")
+            add("Comedy")
+            add("Drama")
+            add("Fantasy")
+            add("Action")
+            add("Animation")
+            add("Comedy")
+            add("Drama")
+            add("Fantasy")
+
         }) {
             wcsClass.dataSet = this
             wcsClass.onItemSelected {
-                tvSelected.text = "Selected:${get(it)}"
+                tvSelected.text = "Selected:${get(it)}, ${wcsClass.selectedItems}"
+                wcsClass.undoSelection()
             }
         }
-        wcsClass.colorTheme = "rgbyv"
+//        wcsClass.colorTheme = "rgbyv"
         tvSelected.setOnClickListener {
             wcsClass.undoSelection()
         }

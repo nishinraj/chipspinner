@@ -10,15 +10,18 @@
 
 
     <raj.nishin.chipspinner.WolfChipSpinner
-        app:wcsTitle="Genre:"
-        app:wcsTextColor="#f00"
-        app:wcsDividers="top"
         android:id="@+id/wcsClass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:wcsDividers="both"
+        app:wcsColorTheme="rg"
+        app:wcsLayout="linear"
+        app:wcsMultipleSelection="false"
+        app:wcsTextColor="#f00"
+        app:wcsTitle="Genre:" />
 
     <TextView
         android:id="@+id/tvSelected"

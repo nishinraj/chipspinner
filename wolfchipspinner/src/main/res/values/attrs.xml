@@ -11,6 +11,10 @@
             <enum name="bottom" value="2" />
             <enum name="both" value="3" />
         </attr>
-        <!--<attr name="show_date_picker" format="boolean" />-->
+        <attr name="wcsLayout" format="enum">
+            <enum name="linear" value="0" />
+            <enum name="flex_grid" value="1" />
+        </attr>
+        <attr name="wcsMultipleSelection" format="boolean" />
     </declare-styleable>
 </resources>

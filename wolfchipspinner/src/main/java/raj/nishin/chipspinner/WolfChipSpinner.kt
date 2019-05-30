@@ -9,6 +9,9 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.item_wolf_chip.view.*
 import kotlinx.android.synthetic.main.wolf_chip_spinner.view.*
 
@@ -17,6 +20,8 @@ import kotlinx.android.synthetic.main.wolf_chip_spinner.view.*
  * at 11:28 on Wednesday 27 March 2019
  */
 
+private const val linear = 0
+private const val flexGrid = 1
 
 class WolfChipSpinner : LinearLayout {
 
@@ -43,6 +48,8 @@ class WolfChipSpinner : LinearLayout {
             spinnerAdapter.selectedPosition = value
         }
     var onItemSelected: ((position: Int) -> Unit)? = null
+    val selectedItems = ArrayList<Int>()
+
     var title = ""
         set(value) {
             field = value
@@ -56,7 +63,8 @@ class WolfChipSpinner : LinearLayout {
             setListPadding()
         }
 
-
+    var layout = linear
+    var multipleSelection = false
     var dividerVisibility = both
         set(value) {
             field = value
@@ -79,7 +87,7 @@ class WolfChipSpinner : LinearLayout {
                 }
             }
         }
-    private var previousPositon = 0
+    private var previousPosition = 0
     var dataSet = ArrayList<String>()
         set(value) {
             field = value
@@ -87,7 +95,8 @@ class WolfChipSpinner : LinearLayout {
         }
     val spinnerAdapter = ChipSpinnerAdapter()
     fun undoSelection() {
-        selectedPosition = previousPositon
+        if (multipleSelection) return
+        selectedPosition = previousPosition
     }
 
     private fun init(ctx: Context, attrs: AttributeSet? = null) {
@@ -106,12 +115,22 @@ class WolfChipSpinner : LinearLayout {
                 }
             }
             dividerVisibility = ta.getInt(R.styleable.WolfChipSpinner_wcsDividers, WolfChipSpinner.none)
+            layout = ta.getInt(R.styleable.WolfChipSpinner_wcsLayout, linear)
+            multipleSelection = ta.getBoolean(R.styleable.WolfChipSpinner_wcsMultipleSelection, false)
             spinnerAdapter.colorTheme =
                 (ta.getString(R.styleable.WolfChipSpinner_wcsColorTheme) ?: "").toLowerCase().toCharArray()
             ta.recycle()
         }
         setListPadding()
-        rvItems.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager: RecyclerView.LayoutManager = if (flexGrid == layout) {
+            FlexboxLayoutManager(ctx).apply {
+                flexDirection = FlexDirection.ROW
+                justifyContent = JustifyContent.FLEX_START
+            }
+        } else {
+            LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
+        }
+        rvItems.layoutManager = layoutManager
         rvItems.adapter = spinnerAdapter
         rvItems.isNestedScrollingEnabled = false
     }
@@ -125,7 +144,7 @@ class WolfChipSpinner : LinearLayout {
     }
 
     inner class ChipSpinnerAdapter(
-        val dataSet: ArrayList<String> = ArrayList()
+        val dataSet: ArrayList<WolfChipModel> = ArrayList()
 
     ) :
         RecyclerView.Adapter<ChipSpinnerAdapter.VH>() {
@@ -139,7 +158,7 @@ class WolfChipSpinner : LinearLayout {
             }
         var selectedPosition = 0
             set(value) {
-                previousPositon = field
+                previousPosition = field
                 field = value
                 notifyDataSetChanged()
             }
@@ -152,19 +171,38 @@ class WolfChipSpinner : LinearLayout {
         override fun onBindViewHolder(holder: VH, position: Int) {
             with(holder.itemView) {
                 rootView.setOnClickListener {
-                    onItemSelected?.invoke(position)
-                    this@WolfChipSpinner.selectedPosition = position
+                    onClick(position)
                 }
                 tvChip.setOnClickListener {
-                    onItemSelected?.invoke(position)
-                    this@WolfChipSpinner.selectedPosition = position
+                    onClick(position)
                 }
                 if (useCustomColorTheme) {
                     tvChip.setBackgroundResource(getBackground(userTheme[position]))
                 }
-                tvChip.text = dataSet[position]
-                isSelected = position == selectedPosition
+                tvChip.text = dataSet[position].text
+                isSelected = if (multipleSelection) {
+                    dataSet[position].selected
+                } else {
+                    position == selectedPosition
+                }
             }
+        }
+
+        private fun onClick(position: Int) {
+            if (multipleSelection) {
+                dataSet[position].selected = !dataSet[position].selected
+                if (dataSet[position].selected) {
+                    selectedItems.add(position)
+                } else {
+                    selectedItems.remove(position)
+                }
+            } else {
+                selectedItems.removeAll(selectedItems)
+                selectedItems.add(position)
+            }
+            onItemSelected?.invoke(position)
+            this@WolfChipSpinner.selectedPosition = position
+            notifyItemChanged(position)
         }
 
         inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -194,7 +232,7 @@ class WolfChipSpinner : LinearLayout {
 
         fun reset(value: ArrayList<String>) {
             dataSet.removeAll(dataSet)
-            dataSet.addAll(value)
+            dataSet.addAll(value.map { WolfChipModel(it, false) })
             setCustomColorTheme()
             notifyDataSetChanged()
         }
